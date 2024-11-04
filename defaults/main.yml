@@ -1,0 +1,20 @@
+---
+
+# Docker project variables
+
+logrotate_project_name: logrotate
+
+
+# Logrotate project variables
+
+logrotate_logs: []
+# Ex:
+#  - src:  /host/app1/path/logs # path on host
+#    dest: /var/log/app1        # path in logrotate container
+#  - src:  /host/app2/path/logs # ...
+#    dest: /var/log/app2        # ...
+
+logrotate_interval: daily
+logrotate_copies:   31
+logrotate_size:     64M
+logrotate_mode:     copytruncate

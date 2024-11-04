@@ -1,0 +1,46 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+# {{ template_fullpath }}
+
+name: {{ docker_project_slug }}
+
+services:
+
+  # https://hub.docker.com/r/blacklabelops/logrotate/
+  logrotate:
+    container_name: {{ docker_project_slug }}
+    image: blacklabelops/logrotate
+    restart: always
+
+    network_mode: none
+
+    {{ docker_project_compose_service_additional_options | indent(4) }}
+
+    environment:
+      - LOGS_DIRECTORIES={{ logrotate_logs | community.general.json_query('[*].dest') | join(' ') }}
+      - LOGROTATE_INTERVAL={{ logrotate_interval | default('daily') }}
+      - LOGROTATE_COPIES={{ logrotate_copies | default('31') }}
+      - LOGROTATE_SIZE={{ logrotate_size | default('64M') }}
+      - LOGROTATE_MODE={{ logrotate_mode | default('copytruncate') }}
+
+      - LOGROTATE_STATUSFILE=/var/log/data/logrotate.status
+      - LOGROTATE_LOGFILE=/var/log/logrotate/logrotate.log
+      - LOG_FILE=/var/log/data/cron.log
+
+    volumes:
+      # logrotate data
+      - ./data:/var/log/data
+      # log directories
+      {% for item in logrotate_logs %}
+      - type: bind
+        source: {{ item.src }}
+        target: {{ item.dest }}
+        bind:
+          create_host_path: false
+      {% endfor %}
+
+    labels:
+      # What's up Docker? - https://github.com/getwud/wud
+      wud.watch.digest: true
+
+{{ docker_project_compose_additional_options }}

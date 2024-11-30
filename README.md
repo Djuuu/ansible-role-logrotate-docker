@@ -31,6 +31,8 @@ logrotate_project_name: logrotate
 
 # Logrotate project variables
 
+logrotate_version: latest
+
 logrotate_logs: []
 # Ex:
 #  - src:  /host/app1/path/logs # path on host

@@ -10,7 +10,7 @@ services:
   logrotate:
     container_name: {{ docker_project_slug }}
     image: blacklabelops/logrotate:{{ logrotate_version }}
-    restart: always
+    restart: unless-stopped
 
     network_mode: none
 

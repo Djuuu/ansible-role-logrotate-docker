@@ -39,10 +39,9 @@ services:
           create_host_path: false
       {% endfor %}
 
+    {% if docker_project_service_additional_labels %}
     labels:
-      # What's up Docker? - https://github.com/getwud/wud
-      #wud.tag.include: ^{{ logrotate_version }}$$
-      #wud.watch.digest: true
-      wud.watch: false # wud keeps finding an update even though project hasn't been updated in years ¯\_(ツ)_/¯
+      {{ docker_project_service_additional_labels | indent(6) }}
+    {% endif %}
 
 {{ docker_project_compose_additional_options }}
